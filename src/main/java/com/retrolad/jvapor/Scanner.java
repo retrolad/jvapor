@@ -81,10 +81,39 @@ class Scanner {
             case '\n':
                 line++;
                 break;
+            // strings
+            case '"': string(); break;
             default:
                 Vapor.error(line, "Unexpected character.");
                 break;    
         }
+    }
+
+    /**
+     * Function to handle strings.
+     * 
+     * Consume characters until we hit " that ends the string.
+     * Also handle tunning out of input before the string is closed.
+     * 
+     * Vapor supports multi-line characters.
+     */
+    private void string() {
+        while (peek() != '"' && !isAtEnd()) {
+            if(peek() == '\n') line++;
+            advance();
+        }
+
+        if (isAtEnd()) {
+            Vapor.error(line, "Unterminated string");
+            return;
+        }
+
+        // Advance the closing ".
+        advance();
+
+        // Trim the surrounding quotes.
+        String value = source.substring(start + 1, current - 1);
+        addToken(TokenType.STRING, value);
     }
 
     /**

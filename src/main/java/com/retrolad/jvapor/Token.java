@@ -1,5 +1,4 @@
 package com.retrolad.jvapor;
-import com.retrolad.jvapor.TokenType;
 
 class Token {
     final TokenType type;

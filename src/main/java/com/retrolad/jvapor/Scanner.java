@@ -1,5 +1,8 @@
 package com.retrolad.jvapor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Scanner {
     // we store the raw source code as a simple string
     private final String source;
@@ -23,7 +26,7 @@ class Scanner {
             scanToken();
         }
 
-        tokens.add(new Token(EOF, "", null, line));
+        tokens.add(new Token(TokenType.EOF, "", null, line));
         return tokens;
     }
 
@@ -52,13 +55,13 @@ class Scanner {
                 addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
                 break;
             case '=':
-                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+                addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
                 break;
             case '<':
-                addToken(match('=') ? LESS_EQUAL : LESS);
+                addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
                 break;
             case '>':
-                addToken(match('=') ? GREATER_EQUAL : GREATER);
+                addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
                 break;
             // longer lexems
             case '/':

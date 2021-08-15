@@ -12,7 +12,7 @@ public class Vapor {
     // Ensure we don't try to execute code that has a kown error.
     static boolean hadError = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jvapor [script]");
             System.exit(64);

@@ -20,7 +20,11 @@ class Scanner {
         while(!isAtEnd()) {
             // We are at the beginning of the next lexeme.
             start = current;
+            scanToken();
         }
+
+        tokens.add(new Token(EOF, "", null, line));
+        return tokens;
     }
 
     private boolean isAtEnd() {
@@ -43,6 +47,7 @@ class Scanner {
             case '+': addToken(TokenType.PLUS); break;
             case ';': addToken(TokenType.SEMICOLON); break;
             case '*': addToken(TokenType.STAR); break;
+            // two characters lexems
             case '!':
                 addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
                 break;
@@ -54,6 +59,24 @@ class Scanner {
                 break;
             case '>':
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
+                break;
+            // longer lexems
+            case '/':
+                if (match('/')) {
+                    // A comment goes until the end of the line
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                } else {
+                    addToken(TokenType.SLASH);
+                }
+                break;
+            // skip meaningless characters
+            case ' ':
+            case '\r':
+            case '\t':
+                // ignore whitespaces
+                break;
+            case '\n':
+                line++;
                 break;
             default:
                 Vapor.error(line, "Unexpected character.");
@@ -92,5 +115,14 @@ class Scanner {
 
         current++;
         return true;
+    }
+
+    /**
+     * Look at the current unconsumed character
+     * @return
+     */
+    private char peek() {
+        if(isAtEnd()) return '\0';
+        return source.charAt(current);
     }
 }

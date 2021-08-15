@@ -6,8 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import jdk.javadoc.internal.doclets.formats.html.SourceToHTMLConverter;
+import java.util.List;
 
 public class Vapor {
     // Ensure we don't try to execute code that has a kown error.

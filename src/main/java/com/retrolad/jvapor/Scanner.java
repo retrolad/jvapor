@@ -43,6 +43,18 @@ class Scanner {
             case '+': addToken(TokenType.PLUS); break;
             case ';': addToken(TokenType.SEMICOLON); break;
             case '*': addToken(TokenType.STAR); break;
+            case '!':
+                addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
+                break;
+            case '=':
+                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+                break;
+            case '<':
+                addToken(match('=') ? LESS_EQUAL : LESS);
+                break;
+            case '>':
+                addToken(match('=') ? GREATER_EQUAL : GREATER);
+                break;
             default:
                 Vapor.error(line, "Unexpected character.");
                 break;    
@@ -67,5 +79,18 @@ class Scanner {
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
+    }
+
+    /**
+     * Determine two characters lexems
+     * @param expected Character that will compose two character lexem with the current one
+     * @return true of false 🤣
+     */
+    private boolean match(char expected) {
+        if(isAtEnd()) return false;
+        if (source.charAt(current) != expected) return false;
+
+        current++;
+        return true;
     }
 }

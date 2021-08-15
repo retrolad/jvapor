@@ -84,9 +84,44 @@ class Scanner {
             // strings
             case '"': string(); break;
             default:
-                Vapor.error(line, "Unexpected character.");
-                break;    
+                // digits
+                if (isDigit(c)) {
+                    number();
+                } else {
+                    Vapor.error(line, "Unexpected character.");
+                }
+            break;    
         }
+    } 
+
+    /** 
+    *  
+    * <p>
+    * All numbers in Vapor are floating point at runtime, but both integer and decimal literals are supported. 
+    * A number literal is a series of digits optionally followed by a . and one or more trailing digits.
+    * <p> 
+    * |   1234
+    * |   12.34
+    * <p>
+    * We don’t allow a leading or trailing decimal point, so these are both invalid:
+    * <p>
+    * |   .1234
+    * |   1234.
+    */
+    private void number() {
+        // While characters are numbers advance the pointer
+        while (isDigit(peek())) advance();
+
+        // Looл for a fractional part
+        if (peek() == '.' && isDigit(peekNext())) {
+            // Consume the "."
+            advance();
+
+            while(isDigit(peek())) advance();
+        }
+
+        // Convert lexeme to its numberic value and create token.
+        addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     /**
@@ -156,5 +191,20 @@ class Scanner {
     private char peek() {
         if(isAtEnd()) return '\0';
         return source.charAt(current);
+    }
+
+    /**
+     * Look at the next unconsumed character
+     */
+    private char peekNext() {
+        if (current + 1 >= source.length()) return '\0';
+        return source.charAt(current + 1);
+    }
+
+    /**
+     * Check if character is digit
+     */
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
     }
 }

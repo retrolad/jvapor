@@ -87,12 +87,24 @@ class Scanner {
                 // digits
                 if (isDigit(c)) {
                     number();
-                } else {
+                } else if (isAlpha(c)) {
+                    identifier();
+                } 
+                else {
                     Vapor.error(line, "Unexpected character.");
                 }
             break;    
         }
     } 
+
+    /**
+     * Identifiers start with a letter or undersocre.
+     */
+    private void identifier() {
+        while(isAlphaNumeric(peek())) advance();
+
+        addToken(TokenType.IDENTIFIER);
+    }
 
     /** 
     *  
@@ -199,6 +211,26 @@ class Scanner {
     private char peekNext() {
         if (current + 1 >= source.length()) return '\0';
         return source.charAt(current + 1);
+    }
+
+    /**
+     * Check if char is an alphabet character or an underscore. 
+     * @param c Char to check
+     * @return
+     */
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c <= 'z') ||
+               (c >= 'A' && c <= 'Z') ||
+               c == '_';
+    }{}
+
+    /**
+     * Check if char is an alphabet, underscore or digit.
+     * @param c
+     * @return
+     */
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
     }
 
     /**

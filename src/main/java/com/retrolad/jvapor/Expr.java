@@ -1,5 +1,8 @@
 package com.retrolad.jvapor;
 
+/**
+ * A base class for expressions
+ */
 public abstract class Expr {
     interface Visitor<R> {
         R visitBinaryExpr(Binary expr);

@@ -74,7 +74,7 @@ class Scanner {
             case '+': addToken(TokenType.PLUS); break;
             case ';': addToken(TokenType.SEMICOLON); break;
             case '*': addToken(TokenType.STAR); break;
-            // two characters lexems
+            // two characters lexemes
             case '!':
                 addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
                 break;
@@ -87,7 +87,7 @@ class Scanner {
             case '>':
                 addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
                 break;
-            // longer lexems
+            // longer lexemes
             case '/':
                 if (match('/')) {
                     // A comment goes until the end of the line
@@ -122,7 +122,7 @@ class Scanner {
     } 
 
     /**
-     * Identifiers start with a letter or undersocre.
+     * Identifiers start with a letter or underscore.
      */
     private void identifier() {
         while(isAlphaNumeric(peek())) advance();
@@ -152,7 +152,7 @@ class Scanner {
         // While characters are numbers advance the pointer
         while (isDigit(peek())) advance();
 
-        // Looл for a fractional part
+        // Look for a fractional part
         if (peek() == '.' && isDigit(peekNext())) {
             // Consume the "."
             advance();
@@ -160,7 +160,7 @@ class Scanner {
             while(isDigit(peek())) advance();
         }
 
-        // Convert lexeme to its numberic value and create token.
+        // Convert lexeme to its numeric value and create token.
         addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
@@ -212,8 +212,8 @@ class Scanner {
     }
 
     /**
-     * Determine two characters lexems
-     * @param expected Character that will compose two character lexem with the current one
+     * Determine two characters lexemes
+     * @param expected Character that will compose two character lexeme with the current one
      * @return true of false 🤣
      */
     private boolean match(char expected) {

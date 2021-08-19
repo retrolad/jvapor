@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Vapor {
-    // Ensure we don't try to execute code that has a kown error.
+    // Ensure we don't try to execute code that has a known error.
     static boolean hadError = false;
 
     public static void main(String[] args) throws IOException {
@@ -60,7 +60,7 @@ public class Vapor {
     }
 
     /**
-     * Tells the user syntax error occured on a given line
+     * Tells the user syntax error occurred on a given line
      * @param line Error line
      * @param message Error message
      */

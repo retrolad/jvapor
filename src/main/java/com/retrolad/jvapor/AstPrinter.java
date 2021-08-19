@@ -1,10 +1,5 @@
 package com.retrolad.jvapor;
 
-import com.retrolad.jvapor.Expr.Binary;
-import com.retrolad.jvapor.Expr.Grouping;
-import com.retrolad.jvapor.Expr.Literal;
-import com.retrolad.jvapor.Expr.Unary;
-
 /**
  * Test class to show the nesting structure of the tree.
  * Each expression is explicitly parenthesized and all of
@@ -38,7 +33,7 @@ public class AstPrinter implements Expr.Visitor<String> {
     /**
      * Literal expressions are easy - they convert the value
      * to a string with a check to handle Java's null standing
-     * in for Varp's nil
+     * in for Vapor's nil
      */
     @Override
     public String visitLiteralExpr(Expr.Literal expr) {

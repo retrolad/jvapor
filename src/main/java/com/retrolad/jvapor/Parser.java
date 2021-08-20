@@ -32,6 +32,90 @@ public class Parser {
         this.tokens = tokens;
     }
 
+    public Expr parse() {
+        try {
+            return expression();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    private Expr expression() {
+        return equality();
+    }
+
+    private Expr equality() {
+        Expr expr = comparison();
+
+        while(match(TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
+            Token operator = previous();
+            Expr right = comparison();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr comparison() {
+        Expr expr = term();
+        while(match(TokenType.LESS, TokenType.LESS_EQUAL, TokenType.GREATER, TokenType.GREATER_EQUAL)) {
+            Token operator = previous();
+            Expr right = term();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    /**
+     * Parse binary expression - and +
+     * <p> {@code factor ( ( "-" | "+" ) factor )*}
+     * @return Binary expression
+     */
+    private Expr term() {
+        Expr expr = factor();
+
+        while(match(TokenType.MINUS, TokenType.PLUS)) {
+            Token operator = previous();
+            Expr right = factor();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    /**
+     * Parse binary expression / and *
+     * <p> {@code factor -> unary ( ( "/" | "*" ) unary )*}
+     * @return Binary expression
+     */
+    private Expr factor() {
+        Expr expr = unary();
+
+        while(match(TokenType.SLASH, TokenType.STAR)) {
+            Token operator = previous();
+            Expr right = unary();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    /**
+     * Parse unary expressions
+     * <p> unary -> ("!","-") unary | primary
+     * @return Unary expression
+     */
+    private Expr unary() {
+        if(match(TokenType.BANG, TokenType.MINUS)) {
+            Token operator = previous();
+            Expr right = unary();
+            return new Expr.Unary(operator, right);
+        }
+
+        return primary();
+    }
+
     /**
      * Parse expressions of the highest level of precedence.
      * Can produce a number or a string literal, true of false
@@ -116,6 +200,8 @@ public class Parser {
      */
     private Token consume(TokenType type) {
         if(check(type)) return advance();
+
+        return null;
     }
 
     /**

@@ -19,6 +19,8 @@ import java.util.List;
  * <p> primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
  */
 public class Parser {
+
+    private static class ParserError extends RuntimeException { }
     /**
      * The list of tokens to process
      */
@@ -132,14 +134,15 @@ public class Parser {
             return new Expr.Literal(previous().literal);
 
         if(match(TokenType.LEFT_PAREN)) {
-            Expr expr = null;
-            consume(TokenType.RIGHT_PAREN);
+            Expr expr = expression();
+            // We must find a ')', otherwise there is an error
+            consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
 
         // Make progress to the next token
         advance();
-        return null;
+        return expression();
     }
 
     /**
@@ -194,14 +197,17 @@ public class Parser {
     }
 
     /**
-     * Consumes tokens until reach the specified one.
-     * @param type
-     * @return
+     * Consumes the specified token, otherwise
+     * throws an error
+     * @param type Type of token to consume
+     * @param message Message
+     * @return Consumed token
      */
-    private Token consume(TokenType type) {
+    private Token consume(TokenType type, String message) {
         if(check(type)) return advance();
 
-        return null;
+        // If we do not get
+        throw error(peek(), message);
     }
 
     /**
@@ -211,5 +217,10 @@ public class Parser {
      */
     private boolean atEnd() {
         return current == tokens.size();
+    }
+
+    private ParserError error(Token token, String message) {
+        Vapor.error(token.line, message);
+        return new ParserError();
     }
 }
